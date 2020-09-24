@@ -3,20 +3,24 @@ import { countBy, thru } from 'lodash';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+const initialState = {
+    posts: [],
+    id: 0,
+    title: '',
+    content: '',
+    flag: null,
+    errors : {},
+    success: '',
+};
+
+
 class ManagePost extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            id: 0,
-            title: '',
-            content: '',
-            posts: [],
-            flag: null,
-            errors : {}
-        };
-
+        this.state = initialState;
     }
+
 
     componentDidMount(){
         this.getAll();
@@ -27,7 +31,7 @@ class ManagePost extends React.Component {
             .then((res) => {
                 this.setState({
                     posts: res.data
-                })
+                });
             })
             .catch((err) => {
                 console.log(err);
@@ -54,7 +58,8 @@ class ManagePost extends React.Component {
 
     submit(event,id){
         event.preventDefault();
-        if(this.state.id == 0){
+        if(this.state.id == 0)
+        {
             Axios.post('/api/post', {
                     title: this.state.title,
                     content: this.state.content
@@ -62,7 +67,8 @@ class ManagePost extends React.Component {
                 .then((res) => {
                     this.getAll();
                     this.setState({
-                        flag: true
+                        flag: true,
+                        success: res.data.message
                     });
                 })
                 .catch((err) => {
@@ -71,7 +77,9 @@ class ManagePost extends React.Component {
                         errors: err.response.data.errors
                     });
                 });
-        }else{
+        }
+        else
+        {
             Axios.put('/api/post/'+id, {
                     title: this.state.title,
                     content: this.state.content
@@ -86,9 +94,6 @@ class ManagePost extends React.Component {
                     });
                 });
         }
-
-
-
     }
 
     titleChange(event){
@@ -104,14 +109,8 @@ class ManagePost extends React.Component {
     }
 
     resetForm(e){
-        this.setState({
-            id: 0,
-            title: '',
-            content: '',
-            flag: null,
-            errors: {}
-        });
-        document.getElementById('submitForm').reset();
+        this.setState(initialState);
+        this.getAll();
     }
 
     render(){
@@ -122,11 +121,11 @@ class ManagePost extends React.Component {
                 <button className='btn btn-success btn-sm' onClick={(e)=>this.resetForm(e)}>Reset</button><hr/>
                 {
                     this.state.flag == false ? errors.map(error=>
-                        <div key={error.toString()}>
+                        <div key={error}>
                             { error.title !== undefined ? <div className='alert alert-danger'>{error.title}</div> : <div></div> }
                             { error.content !== undefined ? <div className='alert alert-danger'>{error.content}</div> : <div></div> }
                         </div>
-                    ) : <div></div>
+                    ) : this.state.success !== '' ? <div className='alert alert-success'>{this.state.success}</div> : <div></div>
                 }
                 <div className='row'>
                     <div className='col-md-12'>

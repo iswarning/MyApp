@@ -38,12 +38,16 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-        Validator::make($request->all(), [
-            'title' => 'required',
+        $validated = $request->validate([
+            'title' => 'required|min:5',
             'content' => 'required'
-        ])->validate();
+        ]);
 
-        return Post::create($request->all());
+        $data = Post::create($request->all());
+
+        if($data){
+            return response()->json(['message' => 'Add success !']);
+        }
 
     }
 

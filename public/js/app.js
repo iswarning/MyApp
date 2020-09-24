@@ -65884,6 +65884,15 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+var initialState = {
+  posts: [],
+  id: 0,
+  title: '',
+  content: '',
+  flag: null,
+  errors: {},
+  success: ''
+};
 
 var ManagePost = /*#__PURE__*/function (_React$Component) {
   _inherits(ManagePost, _React$Component);
@@ -65896,14 +65905,7 @@ var ManagePost = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, ManagePost);
 
     _this = _super.call(this, props);
-    _this.state = {
-      id: 0,
-      title: '',
-      content: '',
-      posts: [],
-      flag: null,
-      errors: {}
-    };
+    _this.state = initialState;
     return _this;
   }
 
@@ -65960,7 +65962,8 @@ var ManagePost = /*#__PURE__*/function (_React$Component) {
           _this4.getAll();
 
           _this4.setState({
-            flag: true
+            flag: true,
+            success: res.data.message
           });
         })["catch"](function (err) {
           _this4.setState({
@@ -65999,14 +66002,8 @@ var ManagePost = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "resetForm",
     value: function resetForm(e) {
-      this.setState({
-        id: 0,
-        title: '',
-        content: '',
-        flag: null,
-        errors: {}
-      });
-      document.getElementById('submitForm').reset();
+      this.setState(initialState);
+      this.getAll();
     }
   }, {
     key: "render",
@@ -66023,13 +66020,15 @@ var ManagePost = /*#__PURE__*/function (_React$Component) {
         }
       }, "Reset"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("hr", null), this.state.flag == false ? errors.map(function (error) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
-          key: error.toString()
+          key: error
         }, error.title !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
           className: "alert alert-danger"
         }, error.title) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null), error.content !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
           className: "alert alert-danger"
         }, error.content) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null));
-      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+      }) : this.state.success !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+        className: "alert alert-success"
+      }, this.state.success) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "col-md-12"
