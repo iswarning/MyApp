@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Post;
-use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-class PostController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        return User::all();
     }
 
     /**
@@ -26,7 +25,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -37,20 +36,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validated = $request->validate([
-            'title' => 'required|min:5',
-            'content' => 'required'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:6',
+            'role' => 'required|numeric'
         ]);
 
-        
-
-        if(!$validated){
-            return response()->json($validated);
-        }else{
-            return Post::create($request->all());
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
         }
 
+        User::create($request->all());
+        return response()->json(['message' => 'Add Success !']);
     }
 
     /**
@@ -61,7 +59,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        return Post::find($id);
+        return User::findOrFail($id);
     }
 
     /**
@@ -72,7 +70,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-
+        //
     }
 
     /**
@@ -84,12 +82,18 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'title' => 'required',
-            'content' => 'required'
-        ])->validate();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'role' => 'required|numeric'
+        ]);
 
-        return Post::find($id)->update($request->all());
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        User::findOrFail($id)->update($request->all());
+        return response()->json(['message' => 'Updated Success !']);
     }
 
     /**
@@ -100,6 +104,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-      return  Post::findOrFail($id)->delete();
+        if(User::findOrFail($id) !== 1)
+        {
+            User::findOrFail($id)->delete();
+        }
     }
 }

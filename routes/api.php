@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'cors'], function(){
-    Route::apiResource('post', PostController::class)->except(['create','edit']);
+    Route::apiResource('post', Api\PostController::class)->except(['create','edit']);
+    Route::apiResource('user', Api\UserController::class)->except(['create','edit','show']);
 });
 

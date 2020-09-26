@@ -14,7 +14,7 @@ const initialState = {
 };
 
 
-class ManagePost extends React.Component {
+class Posts extends React.Component {
 
     constructor(props){
         super(props);
@@ -86,6 +86,10 @@ class ManagePost extends React.Component {
                 })
                 .then((res) => {
                     this.getAll();
+                    this.setState({
+                        flag: true,
+                        success: res.data.message
+                    });
                 })
                 .catch((err) => {
                     this.setState({
@@ -172,8 +176,8 @@ class ManagePost extends React.Component {
 
 }
 
-export default ManagePost;
+export default Posts;
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<ManagePost />, document.getElementById('example'));
+if (document.getElementById('posts')) {
+    ReactDOM.render(<Posts />, document.getElementById('posts'));
 }
