@@ -122,6 +122,7 @@ class Posts extends React.Component {
 
         return (
             <div className="container">
+
                 <button className='btn btn-success btn-sm' onClick={(e)=>this.resetForm(e)}>Reset</button><hr/>
                 {
                     this.state.flag == false ? errors.map(error=>

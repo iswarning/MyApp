@@ -3,4 +3,5 @@
     <div id='posts'>
 
     </div>
+
 @endsection
