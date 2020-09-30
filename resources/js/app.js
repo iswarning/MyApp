@@ -15,3 +15,5 @@ require('./bootstrap');
 require('./components/Posts');
 
 require('./components/Users');
+
+require('./components/Products');

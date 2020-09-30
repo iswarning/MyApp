@@ -30,4 +30,9 @@ class AuthController extends Controller
         Auth::logout();
         return view('home');
     }
+
+    public function register(Request $request)
+    {
+
+    }
 }

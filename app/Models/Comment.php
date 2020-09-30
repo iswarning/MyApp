@@ -16,4 +16,9 @@ class Comment extends Model
     {
         return $this->belongsTo('App\Models\Post', 'post_id');
     }
+
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product','product_id');
+    }
 }

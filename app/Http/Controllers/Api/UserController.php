@@ -44,8 +44,10 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 400);
         }
+
+        
 
         User::create($request->all());
         return response()->json(['message' => 'Add Success !']);
@@ -87,7 +89,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 400);
         }
 
         User::findOrFail($id)->update($request->all());

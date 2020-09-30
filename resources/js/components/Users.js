@@ -69,18 +69,17 @@ class Users extends React.Component {
                 password: this.state.password
             })
             .then(res => {
-                this.getAll();
-                if(res.data.message){
-                    this.setState({
-                        flag: true,
-                        success: res.data.message
-                    });
-                }else{
-                    this.setState({
-                        flag: false,
-                        errors: res.data
-                    });
-                }
+              this.getAll();
+              this.setState({
+                flag: true,
+                success: res.data.message
+              })
+            })
+            .catch((err) =>{
+              this.setState({
+                flag: false,
+                errors: err.response.data
+              })
             });
         }
         else
@@ -91,19 +90,12 @@ class Users extends React.Component {
                     role: this.state.role,
                 })
                 .then(res => {
-                this.getAll();
-                if(res.data.message){
-                    this.setState({
-                        flag: true,
-                        success: res.data.message
-                    });
-                }else{
-                    this.setState({
-                        flag: false,
-                        errors: res.data
-                    });
-                }
-            });
+                  this.getAll();
+                  console.log(res.data);
+                })
+                .catch((err) =>{
+                  console.log(err.response.data);
+                });
         }
     }
 
@@ -131,7 +123,7 @@ class Users extends React.Component {
         });
     }
 
-    resetForm(e){    
+    resetForm(e){
         this.setState(initialState);
         this.getAll();
     }
@@ -140,7 +132,6 @@ class Users extends React.Component {
     render(){
 
         const errors = Array(this.state.errors);
-
 
         return (
             <div className='container'>

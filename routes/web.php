@@ -42,9 +42,11 @@ Route::get('/user', function () {
     return view('user');
 });
 
+Route::get('/product', function () {
+    return view('product');
+});
+
 Route::get('/login',[AuthController::class, 'login'])->name('login');
 Route::post('/login',[AuthController::class, 'postLogin'])->name('postLogin');
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-

@@ -21,5 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'cors'], function(){
     Route::apiResource('post', Api\PostController::class)->except(['create','edit']);
     Route::apiResource('user', Api\UserController::class)->except(['create','edit','show']);
+    Route::apiResource('product', Api\ProductController::class)->except(['create','edit','show']);
 });
-
