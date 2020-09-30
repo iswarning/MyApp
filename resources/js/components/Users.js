@@ -78,7 +78,7 @@ class Users extends React.Component {
             .catch((err) =>{
               this.setState({
                 flag: false,
-                errors: err.response.data
+                errors: err.response.data.errors
               })
             });
         }
@@ -91,37 +91,20 @@ class Users extends React.Component {
                 })
                 .then(res => {
                   this.getAll();
-                  console.log(res.data);
+                  this.setState({
+                    flag: true,
+                    success: res.data.message
+                  })
                 })
                 .catch((err) =>{
-                  console.log(err.response.data);
+                  this.setState({
+                    flag: false,
+                    errors: err.response.data.errors
+                  })
                 });
         }
     }
 
-    nameChange(event){
-        this.setState({
-            name: event.target.value
-        });
-    }
-
-    emailChange(event){
-        this.setState({
-            email: event.target.value
-        });
-    }
-
-    passwordChange(event){
-        this.setState({
-            password: event.target.value
-        });
-    }
-
-    roleChange(event){
-        this.setState({
-            role: event.target.value
-        });
-    }
 
     resetForm(e){
         this.setState(initialState);
@@ -152,19 +135,19 @@ class Users extends React.Component {
                         <form onSubmit={(e)=>this.submit(e, this.state.id)}>
                             <div className='form-group'>
                                 <label>Name: </label>
-                                <input onChange={(e)=>this.nameChange(event)} type='text' className='form-control' value={this.state.name}/>
+                                <input onChange={(e)=>this.setState({name: e.target.value})} type='text' className='form-control' value={this.state.name}/>
                             </div>
                             <div className='form-group'>
                                 <label>Email: </label>
-                                <input onChange={(e)=>this.emailChange(event)} type='email' className='form-control' value={this.state.email}/>
+                                <input onChange={(e)=>this.setState({email: e.target.value})} type='email' className='form-control' value={this.state.email}/>
                             </div>
                             <div className='form-group' >
                                 <label>Password: </label>
-                                <input onChange={(e)=>this.passwordChange(event)} type='password' className='form-control' id='password' value={this.state.password}/>
+                                <input onChange={(e)=>this.setState({password: e.target.value})} type='password' className='form-control' id='password' value={this.state.password}/>
                             </div>
                             <div className='form-group'>
                                 <label>Role: </label>
-                                <input onChange={(e)=>this.roleChange(event)} type='number' className='form-control' value={this.state.role}/>
+                                <input onChange={(e)=>this.setState({role: e.target.value})} type='number' className='form-control' value={this.state.role}/>
                             </div>
                             <button type='submit' className='btn btn-primary btn-sm'>Save</button>
                         </form>

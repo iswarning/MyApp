@@ -35,6 +35,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        /*$this->validate($request, [
+            'TenSanPham' => 'required',
+            'MaLoai' => 'required',
+            'Gia' => 'require',
+            'HinhAnh' => 'required|'
+        ]);*/
         return Product::create($request->all());
     }
 

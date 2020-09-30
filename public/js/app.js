@@ -66147,6 +66147,7 @@ var initialState = {
   products: [],
   id: 0,
   TenSanPham: '',
+  MaLoai: 0,
   Gia: 0,
   MoTa: '',
   HinhAnh: '',
@@ -66196,6 +66197,7 @@ var Products = /*#__PURE__*/function (_React$Component) {
     value: function getOne(product) {
       this.setState({
         id: product.id,
+        MaLoai: product.MaLoai,
         TenSanPham: product.TenSanPham,
         Gia: product.Gia,
         MoTa: product.MoTa,
@@ -66225,6 +66227,7 @@ var Products = /*#__PURE__*/function (_React$Component) {
 
       if (this.state.id === 0) {
         axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/product', {
+          MaLoai: thís.state.MaLoai,
           TenSanPham: this.state.TenSanPham,
           Gia: this.state.Gia,
           MoTa: this.state.MoTa,
@@ -66242,11 +66245,12 @@ var Products = /*#__PURE__*/function (_React$Component) {
         })["catch"](function (err) {
           _this4.setState({
             flag: false,
-            errors: err.response.data
+            errors: err.response.data.errors
           });
         });
       } else {
         axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/api/product/' + id, {
+          MaLoai: thís.state.MaLoai,
           TenSanPham: this.state.TenSanPham,
           Gia: this.state.Gia,
           MoTa: this.state.MoTa,
@@ -66264,7 +66268,7 @@ var Products = /*#__PURE__*/function (_React$Component) {
         })["catch"](function (err) {
           _this4.setState({
             flag: false,
-            errors: err.response.data
+            errors: err.response.data.errors
           });
         });
       }
@@ -66350,6 +66354,26 @@ var Products = /*#__PURE__*/function (_React$Component) {
           return _this5.submit(e, _this5.state.id);
         }
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Category: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        className: "form-control",
+        onChange: function onChange(e) {
+          return _this5.setState({
+            MaLoai: e.target.value
+          });
+        },
+        value: this.state.MaLoai
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        defaultValue: true
+      }, " Choose "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "1"
+      }, " \u0110i\u1EC7n tho\u1EA1i "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "2"
+      }, " Ph\u1EE5 ki\u1EC7n "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "3"
+      }, " Tablet "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "4"
+      }, " Laptop "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Name: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange(e) {
@@ -66611,7 +66635,7 @@ var Users = /*#__PURE__*/function (_React$Component) {
         })["catch"](function (err) {
           _this4.setState({
             flag: false,
-            errors: err.response.data
+            errors: err.response.data.errors
           });
         });
       } else {
@@ -66622,39 +66646,17 @@ var Users = /*#__PURE__*/function (_React$Component) {
         }).then(function (res) {
           _this4.getAll();
 
-          console.log(res.data);
+          _this4.setState({
+            flag: true,
+            success: res.data.message
+          });
         })["catch"](function (err) {
-          console.log(err.response.data);
+          _this4.setState({
+            flag: false,
+            errors: err.response.data.errors
+          });
         });
       }
-    }
-  }, {
-    key: "nameChange",
-    value: function nameChange(event) {
-      this.setState({
-        name: event.target.value
-      });
-    }
-  }, {
-    key: "emailChange",
-    value: function emailChange(event) {
-      this.setState({
-        email: event.target.value
-      });
-    }
-  }, {
-    key: "passwordChange",
-    value: function passwordChange(event) {
-      this.setState({
-        password: event.target.value
-      });
-    }
-  }, {
-    key: "roleChange",
-    value: function roleChange(event) {
-      this.setState({
-        role: event.target.value
-      });
     }
   }, {
     key: "resetForm",
@@ -66701,7 +66703,9 @@ var Users = /*#__PURE__*/function (_React$Component) {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Name: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange(e) {
-          return _this5.nameChange(event);
+          return _this5.setState({
+            name: e.target.value
+          });
         },
         type: "text",
         className: "form-control",
@@ -66710,7 +66714,9 @@ var Users = /*#__PURE__*/function (_React$Component) {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Email: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange(e) {
-          return _this5.emailChange(event);
+          return _this5.setState({
+            email: e.target.value
+          });
         },
         type: "email",
         className: "form-control",
@@ -66719,7 +66725,9 @@ var Users = /*#__PURE__*/function (_React$Component) {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Password: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange(e) {
-          return _this5.passwordChange(event);
+          return _this5.setState({
+            password: e.target.value
+          });
         },
         type: "password",
         className: "form-control",
@@ -66729,7 +66737,9 @@ var Users = /*#__PURE__*/function (_React$Component) {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Role: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: function onChange(e) {
-          return _this5.roleChange(event);
+          return _this5.setState({
+            role: e.target.value
+          });
         },
         type: "number",
         className: "form-control",

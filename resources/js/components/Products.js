@@ -6,6 +6,7 @@ const initialState = {
     products: [],
     id: 0,
     TenSanPham: '',
+    MaLoai: 0,
     Gia: 0,
     MoTa: '',
     HinhAnh: '',
@@ -42,6 +43,7 @@ class Products extends React.Component {
     getOne(product) {
         this.setState({
             id: product.id,
+            MaLoai: product.MaLoai,
             TenSanPham: product.TenSanPham,
             Gia: product.Gia,
             MoTa: product.MoTa,
@@ -66,6 +68,7 @@ class Products extends React.Component {
         e.preventDefault();
         if (this.state.id === 0) {
             Axios.post('/api/product', {
+                    MaLoai: thís.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
                     MoTa: this.state.MoTa,
@@ -84,11 +87,12 @@ class Products extends React.Component {
                 .catch(err => {
                     this.setState({
                         flag: false,
-                        errors: err.response.data
+                        errors: err.response.data.errors
                     })
                 });
         } else {
             Axios.put('/api/product/' + id, {
+                    MaLoai: thís.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
                     MoTa: this.state.MoTa,
@@ -107,7 +111,7 @@ class Products extends React.Component {
                 .catch(err => {
                     this.setState({
                         flag: false,
-                        errors: err.response.data
+                        errors: err.response.data.errors
                     })
                 });
         }
@@ -165,6 +169,16 @@ class Products extends React.Component {
                 <div className='row'>
                     <div className='col-md-12'>
                         <form onSubmit={(e)=>this.submit(e, this.state.id)}>
+                            <div className='form-group'>
+                                <label>Category: </label>
+                                <select className='form-control' onChange={(e)=>this.setState({MaLoai: e.target.value})} value={this.state.MaLoai}>
+                                    <option defaultValue> Choose </option>
+                                    <option value='1'> Điện thoại </option>
+                                    <option value='2'> Phụ kiện </option>
+                                    <option value='3'> Tablet </option>
+                                    <option value='4'> Laptop </option>
+                                </select>
+                            </div>
                             <div className='form-group'>
                                 <label>Name: </label>
                                 <input onChange={(e)=>this.setState({TenSanPham:e.target.value})} type='text' className='form-control' value={this.state.TenSanPham}/>

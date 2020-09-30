@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 class UserController extends Controller
 {
     /**
@@ -36,20 +38,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'name' => 'required',
             'email' => 'required|unique:users',
             'password' => 'required|min:6',
             'role' => 'required|numeric'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        
-
-        User::create($request->all());
+        User::create([
+          'name' => $request->name,
+          'email' => $request->email,
+          'password' => bcrypt($request->password),
+          'role' => $request->role
+        ]);
         return response()->json(['message' => 'Add Success !']);
     }
 
@@ -84,16 +85,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'email' => 'unique:users'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        User::findOrFail($id)->update($request->all());
-        return response()->json(['message' => 'Updated Success !']);
+        User::findOrFail($id)->update([
+          'name' => $request->name,
+          'email' => $request->email,
+          'password' => bcrypt($request->password),
+          'role' => $request->role
+        ]);
+        return response()->json(['message' => 'Updated Success !'], 201);
     }
 
     /**
