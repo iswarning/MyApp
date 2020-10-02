@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import ReactDOM from 'react-dom';
 import { countBy, thru } from 'lodash';
+
 const initialState = {
     products: [],
     id: 0,
     TenSanPham: '',
-    MaLoai: 0,
+    MaLoai: 1,
     Gia: 0,
-    MoTa: '',
+    Mota: '',
     HinhAnh: '',
     HinhCT1: '',
     HinhCT2: '',
@@ -18,7 +19,7 @@ const initialState = {
     success: ''
 };
 
-class Products extends React.Component {
+export default class Products extends React.Component {
     constructor(props) {
         super(props);
         this.state = initialState;
@@ -46,7 +47,7 @@ class Products extends React.Component {
             MaLoai: product.MaLoai,
             TenSanPham: product.TenSanPham,
             Gia: product.Gia,
-            MoTa: product.MoTa,
+            Mota: product.Mota,
             HinhAnh: product.HinhAnh,
             HinhCT1: product.HinhCT1,
             HinhCT2: product.HinhCT2,
@@ -66,12 +67,12 @@ class Products extends React.Component {
 
     submit(e, id) {
         e.preventDefault();
-        if (this.state.id === 0) {
+        if (this.state.id == 0) {
             Axios.post('/api/product', {
-                    MaLoai: thís.state.MaLoai,
+                    MaLoai: this.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
-                    MoTa: this.state.MoTa,
+                    Mota: this.state.Mota,
                     HinhAnh: this.state.HinhAnh,
                     HinhCT1: this.state.HinhCT1,
                     HinhCT2: this.state.HinhCT2,
@@ -95,7 +96,7 @@ class Products extends React.Component {
                     MaLoai: thís.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
-                    MoTa: this.state.MoTa,
+                    Mota: this.state.Mota,
                     HinhAnh: this.state.HinhAnh,
                     HinhCT1: this.state.HinhCT1,
                     HinhCT2: this.state.HinhCT2,
@@ -154,70 +155,93 @@ class Products extends React.Component {
       const errors = Array(this.state.errors);
         return (
             <div className='container'>
-                <button className='btn btn-success btn-sm' onClick={(e)=>this.resetForm(e)}>Reset</button><hr/>
-                {
-                    this.state.flag == false ? errors.map(error=>
-                        <div key={error}>
-                            { error.name !== undefined ? <div className='alert alert-danger'>{error.name}</div> : <div></div> }
-                            { error.email !== undefined ? <div className='alert alert-danger'>{error.email}</div> : <div></div> }
-                            { error.password !== undefined ? <div className='alert alert-danger'>{error.password}</div> : <div></div> }
-                            { error.role !== undefined ? <div className='alert alert-danger'>{error.role}</div> : <div></div> }
-                        </div>
-                    ) : this.state.flag == true ? <div className='alert alert-success'>{this.state.success}</div> : <div></div>
-                }
 
-                <div className='row'>
-                    <div className='col-md-12'>
+                <button type="button" className="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onClick={(e)=>this.resetForm(e)}>Add New Product</button>
+                <p>&nbsp;</p>
+                  <div className="modal" id="myModal">
+                    <div className="modal-dialog">
+                      <div className="modal-content">
+
+
+                        <div className="modal-header">
+                          <div className="modal-title"><button className='btn btn-danger btn-sm' onClick={(e)=>this.resetForm(e)}>Reset</button></div>
+                          <button type="button" className="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+
                         <form onSubmit={(e)=>this.submit(e, this.state.id)}>
-                            <div className='form-group'>
-                                <label>Category: </label>
-                                <select className='form-control' onChange={(e)=>this.setState({MaLoai: e.target.value})} value={this.state.MaLoai}>
-                                    <option defaultValue> Choose </option>
-                                    <option value='1'> Điện thoại </option>
+                          <div className="modal-body">
+
+                            {
+                                this.state.flag == false ? errors.map(error=>
+                                    <div key={error}>
+                                        { error.TenSanPham !== undefined ? <div className='alert alert-danger'>{error.TenSanPham}</div> : <div></div> }
+                                        { error.Gia !== undefined ? <div className='alert alert-danger'>{error.Gia}</div> : <div></div> }
+                                        { error.MaLoai !== undefined ? <div className='alert alert-danger'>{error.MaLoai}</div> : <div></div> }
+                                        { error.HinhAnh !== undefined ? <div className='alert alert-danger'>{error.HinhAnh}</div> : <div></div> }
+                                        { error.HinhCT1 !== undefined ? <div className='alert alert-danger'>{error.HinhCT1}</div> : <div></div> }
+                                        { error.HinhCT2 !== undefined ? <div className='alert alert-danger'>{error.HinhCT2}</div> : <div></div> }
+                                        { error.HangSanXuat !== undefined ? <div className='alert alert-danger'>{error.HangSanXuat}</div> : <div></div> }
+                                    </div>
+                                ) : this.state.flag == true ? <div className='alert alert-success'>{this.state.success}</div> : <div></div>
+                            }
+
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Category: </b></label>
+
+                                <select className='form-control col-sm-8' onChange={(e)=>this.setState({MaLoai: e.target.value})} value={this.state.MaLoai}>
+                                    <option value='1' defaultValue> Điện thoại </option>
                                     <option value='2'> Phụ kiện </option>
                                     <option value='3'> Tablet </option>
                                     <option value='4'> Laptop </option>
                                 </select>
-                            </div>
-                            <div className='form-group'>
-                                <label>Name: </label>
-                                <input onChange={(e)=>this.setState({TenSanPham:e.target.value})} type='text' className='form-control' value={this.state.TenSanPham}/>
-                            </div>
-                            <div className='form-group'>
-                                <label>Price: </label>
-                                <input onChange={(e)=>this.setState({Gia:e.target.value})} type='number' className='form-control' value={this.state.Gia}/>
-                            </div>
-                            <div className='form-group'>
-                                <label>Description: </label>
-                                <textarea onChange={(e)=>this.setState({MoTa:e.target.value})} rows='5' className='form-control' value={this.state.MoTa}></textarea>
-                            </div>
-                            <div className='form-group'>
-                                <label>Main Image: </label><br/>
-                                <img src={this.state.HinhAnh} width='40px' height='40px' /><br/><br/>
-                                <input onChange={(e)=>this.changeImage(e)} type='file' className='form-control'/><br/>
-                            </div>
-                            <div className='form-group'>
-                                <label>Mini Image 1: </label><br/>
-                                <img src={this.state.HinhCT1} width='40px' height='40px' /><br/><br/>
-                                <input onChange={(e)=>this.changeImage1(e)} type='file' className='form-control'/><br/>
-                            </div>
-                            <div className='form-group'>
-                                <label>Mini Image 2: </label><br/>
-                                <img src={this.state.HinhCT2} width='40px' height='40px' /><br/><br/>
-                                <input onChange={(e)=>this.changeImage2(e)} type='file' className='form-control'/><br/>
-                            </div>
-                            <div className='form-group'>
-                                <label>Brand: </label>
-                                <input onChange={(e)=>this.setState({HangSanXuat:e.target.value})} type='text' className='form-control'  value={this.state.HangSanXuat}/>
+
                             </div>
 
-                            <button type='submit' className='btn btn-primary btn-sm'>Save</button>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Name: </b></label>
+                                <input onChange={(e)=>this.setState({TenSanPham:e.target.value})} type='text' className='form-control col-sm-8' value={this.state.TenSanPham}/>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Price: </b></label>
+                                <input onChange={(e)=>this.setState({Gia:e.target.value})} type='number' className='form-control col-sm-8' value={this.state.Gia}/>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Description: </b></label>
+                                <textarea onChange={(e)=>this.setState({Mota:e.target.value})} rows='3' className='form-control col-sm-8' value={this.state.Mota}></textarea>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Main Image: </b></label>
+                                <img src={this.state.HinhAnh} width='40px' height='40px' className='col-sm-2'/>
+                                <input onChange={(e)=>this.changeImage(e)} type='file' className='form-control col-sm-6'/>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Mini Image 1: </b></label>
+                                <img src={this.state.HinhCT1} width='40px' height='40px' className='col-sm-2'/>
+                                <input onChange={(e)=>this.changeImage1(e)} type='file' className='form-control col-sm-6'/>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Mini Image 2: </b></label>
+                                <img src={this.state.HinhCT2} width='40px' height='40px' className='col-sm-2'/>
+                                <input onChange={(e)=>this.changeImage2(e)} type='file' className='form-control col-sm-6'/>
+                            </div>
+                            <div className='form-group row'>
+                                <label className='col-sm-3 col-form-label'><b>Brand: </b></label>
+                                <input onChange={(e)=>this.setState({HangSanXuat:e.target.value})} type='text' className='form-control col-sm-8'  value={this.state.HangSanXuat}/>
+                            </div>
+
+                          </div>
+                          <div className="modal-footer">
+                            <button type='submit' className='btn btn-primary'>Save</button>
+                            <button type="button" className="btn btn-danger" data-dismiss="modal">Close</button>
+                          </div>
                         </form>
+                      </div>
                     </div>
-                </div><br/>
+                  </div>
 
                 <div className='row'>
-                    <table className='table'>
+                    <table className='table table-bordered'>
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -241,18 +265,19 @@ class Products extends React.Component {
                                 <td><img src={product.HinhCT1} width='40px' height='40px' /></td>
                                 <td><img src={product.HinhCT2} width='40px' height='40px' /></td>
                                 <td>{product.HangSanXuat}</td>
-                                <td><button onClick={(e)=>this.getOne(product)} className='btn btn-outline-success btn-sm'>Edit</button></td>
+                                <td><button onClick={(e)=>this.getOne(product)} className='btn btn-outline-success btn-sm' data-toggle="modal" data-target="#myModal">Edit</button></td>
                                 <td><button onClick={(e)=>this.deleteOne(product.id)} className='btn btn-outline-danger btn-sm'>Delete</button></td>
                             </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+
             </div>
         )
     }
 }
-export default Products;
+
 if(document.getElementById('products')){
   ReactDOM.render(<Products />,document.getElementById('products'));
 }

@@ -10,7 +10,15 @@ class Product extends Model
     use HasFactory;
 
     protected $table = 'sanpham';
-    protected $fillable = ['TenSanPham','Gia','Mota','HangSanXuat'];
+    protected $fillable = [
+      'MaLoai',
+      'TenSanPham',
+      'Gia','Mota',
+      'HangSanXuat',
+      'HinhAnh',
+      'HinhCT1',
+      'HinhCT2'
+    ];
 
     public function comments()
     {
