@@ -8,13 +8,13 @@ const initialState = {
     id: 0,
     TenSanPham: '',
     MaLoai: 1,
-    Gia: 0,
-    Mota: '',
-    HinhAnh: '',
-    HinhCT1: '',
-    HinhCT2: '',
+    Gia: '',
+    MoTa: '',
+    HinhAnh: null,
+    HinhCT1: null,
+    HinhCT2: null,
     HangSanXuat: '',
-    flag: null,
+    hasErrors: null,
     errors: {},
     success: ''
 };
@@ -47,7 +47,7 @@ export default class Products extends React.Component {
             MaLoai: product.MaLoai,
             TenSanPham: product.TenSanPham,
             Gia: product.Gia,
-            Mota: product.Mota,
+            MoTa: product.MoTa,
             HinhAnh: product.HinhAnh,
             HinhCT1: product.HinhCT1,
             HinhCT2: product.HinhCT2,
@@ -72,7 +72,7 @@ export default class Products extends React.Component {
                     MaLoai: this.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
-                    Mota: this.state.Mota,
+                    MoTa: this.state.MoTa,
                     HinhAnh: this.state.HinhAnh,
                     HinhCT1: this.state.HinhCT1,
                     HinhCT2: this.state.HinhCT2,
@@ -81,22 +81,21 @@ export default class Products extends React.Component {
                 .then(res => {
                     this.getAll();
                     this.setState({
-                        flag: true,
                         success: res.data.message
-                    })
+                    });
                 })
                 .catch(err => {
                     this.setState({
-                        flag: false,
+                        hasErrors: true,
                         errors: err.response.data.errors
-                    })
+                    });
                 });
         } else {
             Axios.put('/api/product/' + id, {
-                    MaLoai: thís.state.MaLoai,
+                    MaLoai: this.state.MaLoai,
                     TenSanPham: this.state.TenSanPham,
                     Gia: this.state.Gia,
-                    Mota: this.state.Mota,
+                    MoTa: this.state.MoTa,
                     HinhAnh: this.state.HinhAnh,
                     HinhCT1: this.state.HinhCT1,
                     HinhCT2: this.state.HinhCT2,
@@ -105,15 +104,15 @@ export default class Products extends React.Component {
                 .then(res => {
                     this.getAll();
                     this.setState({
-                        flag: true,
                         success: res.data.message
                     })
                 })
                 .catch(err => {
                     this.setState({
-                        flag: false,
+                        hasErrors: true,
                         errors: err.response.data.errors
-                    })
+                    });
+                    
                 });
         }
     }
@@ -169,21 +168,20 @@ export default class Products extends React.Component {
                         </div>
 
 
-                        <form onSubmit={(e)=>this.submit(e, this.state.id)}>
+                        <form onSubmit={(e)=>this.submit(e, this.state.id)} encType="multipart/form-data">
                           <div className="modal-body">
 
                             {
-                                this.state.flag == false ? errors.map(error=>
+                                this.state.hasErrors == true ? errors.map(error=>
                                     <div key={error}>
-                                        { error.TenSanPham !== undefined ? <div className='alert alert-danger'>{error.TenSanPham}</div> : <div></div> }
-                                        { error.Gia !== undefined ? <div className='alert alert-danger'>{error.Gia}</div> : <div></div> }
-                                        { error.MaLoai !== undefined ? <div className='alert alert-danger'>{error.MaLoai}</div> : <div></div> }
-                                        { error.HinhAnh !== undefined ? <div className='alert alert-danger'>{error.HinhAnh}</div> : <div></div> }
-                                        { error.HinhCT1 !== undefined ? <div className='alert alert-danger'>{error.HinhCT1}</div> : <div></div> }
-                                        { error.HinhCT2 !== undefined ? <div className='alert alert-danger'>{error.HinhCT2}</div> : <div></div> }
-                                        { error.HangSanXuat !== undefined ? <div className='alert alert-danger'>{error.HangSanXuat}</div> : <div></div> }
+                                        { error.TenSanPham !== null ? <div className='alert alert-danger'>{error.TenSanPham}</div> : <div></div> }
+                                        { error.Gia !== null ? <div className='alert alert-danger'>{error.Gia}</div> : <div></div> }
+                                        { error.HinhAnh !== null ? <div className='alert alert-danger'>{error.HinhAnh}</div> : <div></div> }
+                                        { error.HinhCT1 !== null ? <div className='alert alert-danger'>{error.HinhCT1}</div> : <div></div> }
+                                        { error.HinhCT2 !== null ? <div className='alert alert-danger'>{error.HinhCT2}</div> : <div></div> }
+                                        { error.HangSanXuat !== null ? <div className='alert alert-danger'>{error.HangSanXuat}</div> : <div></div> }
                                     </div>
-                                ) : this.state.flag == true ? <div className='alert alert-success'>{this.state.success}</div> : <div></div>
+                                ) : this.state.hasErrors == false ? <div className='alert alert-success'>{this.state.success}</div> : <div></div>
                             }
 
                             <div className='form-group row'>
@@ -208,7 +206,7 @@ export default class Products extends React.Component {
                             </div>
                             <div className='form-group row'>
                                 <label className='col-sm-3 col-form-label'><b>Description: </b></label>
-                                <textarea onChange={(e)=>this.setState({Mota:e.target.value})} rows='3' className='form-control col-sm-8' value={this.state.Mota}></textarea>
+                                <textarea onChange={(e)=>this.setState({MoTa:e.target.value})} rows='3' className='form-control col-sm-8' value={this.state.MoTa}></textarea>
                             </div>
                             <div className='form-group row'>
                                 <label className='col-sm-3 col-form-label'><b>Main Image: </b></label>

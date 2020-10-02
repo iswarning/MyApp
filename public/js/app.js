@@ -66149,13 +66149,13 @@ var initialState = {
   id: 0,
   TenSanPham: '',
   MaLoai: 1,
-  Gia: 0,
-  Mota: '',
-  HinhAnh: '',
-  HinhCT1: '',
-  HinhCT2: '',
+  Gia: '',
+  MoTa: '',
+  HinhAnh: null,
+  HinhCT1: null,
+  HinhCT2: null,
   HangSanXuat: '',
-  flag: null,
+  hasErrors: null,
   errors: {},
   success: ''
 };
@@ -66201,7 +66201,7 @@ var Products = /*#__PURE__*/function (_React$Component) {
         MaLoai: product.MaLoai,
         TenSanPham: product.TenSanPham,
         Gia: product.Gia,
-        Mota: product.Mota,
+        MoTa: product.MoTa,
         HinhAnh: product.HinhAnh,
         HinhCT1: product.HinhCT1,
         HinhCT2: product.HinhCT2,
@@ -66231,7 +66231,7 @@ var Products = /*#__PURE__*/function (_React$Component) {
           MaLoai: this.state.MaLoai,
           TenSanPham: this.state.TenSanPham,
           Gia: this.state.Gia,
-          Mota: this.state.Mota,
+          MoTa: this.state.MoTa,
           HinhAnh: this.state.HinhAnh,
           HinhCT1: this.state.HinhCT1,
           HinhCT2: this.state.HinhCT2,
@@ -66240,21 +66240,20 @@ var Products = /*#__PURE__*/function (_React$Component) {
           _this4.getAll();
 
           _this4.setState({
-            flag: true,
             success: res.data.message
           });
         })["catch"](function (err) {
           _this4.setState({
-            flag: false,
+            hasErrors: true,
             errors: err.response.data.errors
           });
         });
       } else {
         axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/api/product/' + id, {
-          MaLoai: thís.state.MaLoai,
+          MaLoai: this.state.MaLoai,
           TenSanPham: this.state.TenSanPham,
           Gia: this.state.Gia,
-          Mota: this.state.Mota,
+          MoTa: this.state.MoTa,
           HinhAnh: this.state.HinhAnh,
           HinhCT1: this.state.HinhCT1,
           HinhCT2: this.state.HinhCT2,
@@ -66263,12 +66262,11 @@ var Products = /*#__PURE__*/function (_React$Component) {
           _this4.getAll();
 
           _this4.setState({
-            flag: true,
             success: res.data.message
           });
         })["catch"](function (err) {
           _this4.setState({
-            flag: false,
+            hasErrors: true,
             errors: err.response.data.errors
           });
         });
@@ -66358,28 +66356,27 @@ var Products = /*#__PURE__*/function (_React$Component) {
       }, "\xD7")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         onSubmit: function onSubmit(e) {
           return _this5.submit(e, _this5.state.id);
-        }
+        },
+        encType: "multipart/form-data"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "modal-body"
-      }, this.state.flag == false ? errors.map(function (error) {
+      }, this.state.hasErrors == true ? errors.map(function (error) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: error
-        }, error.TenSanPham !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.TenSanPham !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
-        }, error.TenSanPham) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.Gia !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.TenSanPham) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.Gia !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
-        }, error.Gia) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.MaLoai !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.Gia) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhAnh !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
-        }, error.MaLoai) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhAnh !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.HinhAnh) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhCT1 !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
-        }, error.HinhAnh) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhCT1 !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.HinhCT1) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhCT2 !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
-        }, error.HinhCT1) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HinhCT2 !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "alert alert-danger"
-        }, error.HinhCT2) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HangSanXuat !== undefined ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, error.HinhCT2) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), error.HangSanXuat !== null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "alert alert-danger"
         }, error.HangSanXuat) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null));
-      }) : this.state.flag == true ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }) : this.state.hasErrors == false ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-success"
       }, this.state.success) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group row"
@@ -66435,12 +66432,12 @@ var Products = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Description: ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         onChange: function onChange(e) {
           return _this5.setState({
-            Mota: e.target.value
+            MoTa: e.target.value
           });
         },
         rows: "3",
         className: "form-control col-sm-8",
-        value: this.state.Mota
+        value: this.state.MoTa
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -66852,8 +66849,8 @@ if (document.getElementById('users')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/MyApp/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/MyApp/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\MyApp\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\MyApp\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

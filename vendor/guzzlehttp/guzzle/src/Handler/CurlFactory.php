@@ -6,7 +6,6 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\LazyOpenStream;
 use GuzzleHttp\TransferStats;
 use GuzzleHttp\Utils;
@@ -14,10 +13,16 @@ use Psr\Http\Message\RequestInterface;
 
 /**
  * Creates curl resources from a request
+ *
+ * @final
  */
 class CurlFactory implements CurlFactoryInterface
 {
     public const CURL_VERSION_STR = 'curl_version';
+
+    /**
+     * @deprecated
+     */
     public const LOW_CURL_VERSION_NUMBER = '7.21.2';
 
     /**
@@ -132,7 +137,7 @@ class CurlFactory implements CurlFactoryInterface
             $easy->errno,
             $curlStats
         );
-        \call_user_func($easy->options['on_stats'], $stats);
+        ($easy->options['on_stats'])($stats);
     }
 
     /**
@@ -185,21 +190,16 @@ class CurlFactory implements CurlFactoryInterface
                 )
             );
         }
-        if (\version_compare($ctx[self::CURL_VERSION_STR], self::LOW_CURL_VERSION_NUMBER)) {
-            $message = \sprintf(
-                'cURL error %s: %s (%s)',
-                $ctx['errno'],
-                $ctx['error'],
-                'see https://curl.haxx.se/libcurl/c/libcurl-errors.html'
-            );
-        } else {
-            $message = \sprintf(
-                'cURL error %s: %s (%s) for %s',
-                $ctx['errno'],
-                $ctx['error'],
-                'see https://curl.haxx.se/libcurl/c/libcurl-errors.html',
-                $easy->request->getUri()
-            );
+
+        $message = \sprintf(
+            'cURL error %s: %s (%s)',
+            $ctx['errno'],
+            $ctx['error'],
+            'see https://curl.haxx.se/libcurl/c/libcurl-errors.html'
+        );
+        $uriString = (string) $easy->request->getUri();
+        if ($uriString !== '' && false === \strpos($ctx['error'], $uriString)) {
+            $message .= \sprintf(' for %s', $uriString);
         }
 
         // Create a connection exception if it was a specific error code.
@@ -392,7 +392,12 @@ class CurlFactory implements CurlFactoryInterface
             }
         }
 
-        if (isset($options['sink'])) {
+        // Do not connect a sink for HEAD requests.
+        if ($easy->request->getMethod() !== 'HEAD') {
+            if (!isset($options['sink'])) {
+                // Use a default temp stream if no sink was set.
+                $options['sink'] = \fopen('php://temp', 'w+');
+            }
             $sink = $options['sink'];
             if (!\is_string($sink)) {
                 $sink = \GuzzleHttp\Psr7\stream_for($sink);
@@ -410,11 +415,8 @@ class CurlFactory implements CurlFactoryInterface
             $conf[\CURLOPT_WRITEFUNCTION] = static function ($ch, $write) use ($sink): int {
                 return $sink->write($write);
             };
-        } else {
-            // Use a default temp stream if no sink was set.
-            $conf[\CURLOPT_FILE] = \fopen('php://temp', 'w+');
-            $easy->sink = Psr7\stream_for($conf[\CURLOPT_FILE]);
         }
+
         $timeoutRequiresNoSignal = false;
         if (isset($options['timeout'])) {
             $timeoutRequiresNoSignal |= $options['timeout'] < 1;
@@ -496,13 +498,8 @@ class CurlFactory implements CurlFactoryInterface
                 );
             }
             $conf[\CURLOPT_NOPROGRESS] = false;
-            $conf[\CURLOPT_PROGRESSFUNCTION] = static function () use ($progress) {
-                $args = \func_get_args();
-                // PHP 5.5 pushed the handle onto the start of the args
-                if (\is_resource($args[0])) {
-                    \array_shift($args);
-                }
-                \call_user_func_array($progress, $args);
+            $conf[\CURLOPT_PROGRESSFUNCTION] = static function ($resource, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) use ($progress) {
+                $progress($downloadSize, $downloaded, $uploadSize, $uploaded);
             };
         }
 

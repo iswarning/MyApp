@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     /**
@@ -38,32 +39,35 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'TenSanPham' => 'required',
-            'MaLoai' => 'required|numeric',
-            'Gia' => 'require|numberic',
-            'HinhAnh' => 'required|image|mimes:png,jpg,jpeg',
-            'HinhCT1' => 'required|image|mimes:png,jpg,jpeg',
-            'HinhCT2' => 'required|image|mimes:png,jpg,jpeg',
+            'Gia' => 'required|numeric',
             'HangSanXuat' => 'required'
         ]);
 
-        $fullName = '';
+        $img[0] = $request->HinhAnh;
+        $img[1] = $request->HinhCT1;
+        $img[2] = $request->HinhCT2;
 
-        if(hasFile($request->HinhAnh)){
-          $file = $request->HinhAnh;
-          $name = $file->getClientOriginalName();
-          $extension = $file->getClientOriginalExtension();
-          $fullName = 'image/'.$name.'.'.$extension;
-          $public_path('/public');
-          $file->move($public_path, $fullName);
+        for($i = 0; $i < 3; $i++)
+        {
+            if($img[$i] !== null)
+            {
+                $image = $img[$i];
+                $name = $image->getClientOriginalName();
+                $name = Str::random(10);
+                $fullName = $name.'.'.$image->getClientOriginalExtension();
+                $destination = public_path('/image');
+                $image->move($destination,$fullName);
+                $img[$i] = "image/".$fullName;
+            }
         }
 
         $newItem = new Product();
         $newItem->TenSanPham = $request->TenSanPham;
         $newItem->MaLoai = $request->MaLoai;
         $newItem->Gia = $request->Gia;
-        $newItem->HinhAnh = $fullName;
-        $newItem->HinhCT1 = $request->HinhCT1;
-        $newItem->HinhCT2 = $request->HinhCT2;
+        $newItem->HinhAnh = $img[0];
+        $newItem->HinhCT1 = $img[1];
+        $newItem->HinhCT2 = $img[2];
         $newItem->HangSanXuat = $request->HangSanXuat;
         $newItem->save();
 

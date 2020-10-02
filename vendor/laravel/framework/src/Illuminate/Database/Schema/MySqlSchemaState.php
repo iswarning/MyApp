@@ -81,9 +81,11 @@ class MySqlSchemaState extends SchemaState
      */
     protected function baseDumpCommand()
     {
+        $columnStatistics = $this->connection->isMaria() ? '' : '--column-statistics=0';
+
         $gtidPurged = $this->connection->isMaria() ? '' : '--set-gtid-purged=OFF';
 
-        return 'mysqldump '.$gtidPurged.' --column-statistics=0 --skip-add-drop-table --skip-add-locks --skip-comments --skip-set-charset --tz-utc --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --user="${:LARAVEL_LOAD_USER}" --password="${:LARAVEL_LOAD_PASSWORD}" "${:LARAVEL_LOAD_DATABASE}"';
+        return 'mysqldump '.$gtidPurged.' '.$columnStatistics.' --skip-add-drop-table --skip-add-locks --skip-comments --skip-set-charset --tz-utc --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --user="${:LARAVEL_LOAD_USER}" --password="${:LARAVEL_LOAD_PASSWORD}" "${:LARAVEL_LOAD_DATABASE}"';
     }
 
     /**
@@ -114,7 +116,7 @@ class MySqlSchemaState extends SchemaState
     protected function executeDumpProcess(Process $process, $output, array $variables)
     {
         try {
-            $process->mustRun($output, $variables);
+            $process->setTimeout(null)->mustRun($output, $variables);
         } catch (Exception $e) {
             if (Str::contains($e->getMessage(), ['column-statistics', 'column_statistics'])) {
                 return $this->executeDumpProcess(Process::fromShellCommandLine(
